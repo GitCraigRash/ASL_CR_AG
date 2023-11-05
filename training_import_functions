@@ -14,7 +14,7 @@ def search_asl_images(directory, number_of_images):
   for item in curr_file:
     if item.endswith('.jpg') == True:
       sub_directory = os.path.join(directory,item)
-      image_dictionary = collect_training_images(directory, number_of_images)
+      image_dictionary = collect_training_images(sub_directory, number_of_images)
     sub_directory = os.path.join(directory,item)
     image_dictionary = search_asl_images(sub_directory, number_of_images)
     if type(image_dictionary) == type({}):
@@ -35,3 +35,4 @@ def collect_training_images(sub_directory, number_of_images):
     print(label,image)
     image_dictionary.update({img_directory:label})
   return image_dictionary
+
