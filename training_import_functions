@@ -1,17 +1,3 @@
-def collect_training_images(sub_directory,number_of_images):
-  import re
-  pattern = r'/([^/\d]+)(\d+)\.jpg$'
-  print(sub_directory, number_of_images)
-  for number,image in enumerate(os.listdir(sub_directory)):
-    #print(number,os.path.join(sub_directory, image),number_of_images)
-    if number == number_of_images - 1:
-      break
-    matches = re.search(pattern, image)
-    label = matches.group(1)
-    print(label,image)
-    image_dictionary.update({image:label})
-  return image_dictionary
-
 def search_asl_images(directory, number_of_images):
   """
   Searches root directory until it creates dictionary enteries for a certain
@@ -26,10 +12,26 @@ def search_asl_images(directory, number_of_images):
   image_dictionary = "No ASL photos found."
   curr_file = os.listdir(directory)
   for item in curr_file:
-    if filename.endswith('.jpg') == True:
-      sub_directory = os.join(directory,item)
-      image_dictionary = collect_training_images(sub_directory, number_of_images)
-    sub_directory = os.join(directory,item)
+    if item.endswith('.jpg') == True:
+      sub_directory = os.path.join(directory,item)
+      image_dictionary = collect_training_images(directory, number_of_images)
+    sub_directory = os.path.join(directory,item)
     image_dictionary = search_asl_images(sub_directory, number_of_images)
     if type(image_dictionary) == type({}):
       return image_dictionary
+
+def collect_training_images(sub_directory, number_of_images):
+  import re
+  pattern = r'/([^/\d]+)(\d+)\.jpg$'
+  print(sub_directory, number_of_images)
+  image_dictionary = {}
+  for number,image in enumerate(os.listdir(sub_directory)):
+    #print(number,os.path.join(sub_directory, image),number_of_images)
+    if number == number_of_images - 1:
+      break
+    img_directory = os.path.join(sub_directory,image)
+    matches = re.search(pattern, img_directory)
+    label = matches.group(1)
+    print(label,image)
+    image_dictionary.update({img_directory:label})
+  return image_dictionary
