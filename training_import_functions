@@ -1,7 +1,9 @@
 def search_asl_images(directory, number_of_images):
   """
-  Searches root directory until it creates dictionary enteries for a certain
-  amount of images.
+  Searches root directory until it finds dictionary containing images. 
+  Calls collect_training_images. Returns dictionary with specified 
+  number of images.
+
   imputs:
   directory
   number_of_images
@@ -12,27 +14,28 @@ def search_asl_images(directory, number_of_images):
   image_dictionary = "No ASL photos found."
   curr_file = os.listdir(directory)
   for item in curr_file:
-    if item.endswith('.jpg') == True:
-      sub_directory = os.path.join(directory,item)
-      image_dictionary = collect_training_images(sub_directory, number_of_images)
-    sub_directory = os.path.join(directory,item)
-    image_dictionary = search_asl_images(sub_directory, number_of_images)
-    if type(image_dictionary) == type({}):
+    if item == 'A':
+      image_dictionary = collect_training_images(directory, number_of_images)
       return image_dictionary
+    else:
+      sub_directory = os.path.join(directory,item)
+      image_dictionary = search_asl_images(sub_directory, number_of_images)
 
-def collect_training_images(sub_directory, number_of_images):
+def collect_training_images(directory, number_of_images):
   import re
   pattern = r'/([^/\d]+)(\d+)\.jpg$'
-  print(sub_directory, number_of_images)
+  print(directory)
   image_dictionary = {}
-  for number,image in enumerate(os.listdir(sub_directory)):
-    #print(number,os.path.join(sub_directory, image),number_of_images)
-    if number == number_of_images - 1:
-      break
-    img_directory = os.path.join(sub_directory,image)
-    matches = re.search(pattern, img_directory)
-    label = matches.group(1)
-    print(label,image)
-    image_dictionary.update({img_directory:label})
+  for letter in os.listdir(directory):
+    letter_file = os.path.join(directory,letter)
+    print(letter_file)
+    for number, image in enumerate(os.listdir(letter_file)):
+    #print(number,os.path.join(directory,sub_file))
+      if number == number_of_images - 1:
+        break
+      image_directory = os.path.join(letter_file,image)
+      matches = re.search(pattern, image_directory)
+      label = matches.group(1)
+      print(label,image_directory)
+      image_dictionary.update({image_directory:label}) # should I transform the image into np.array?
   return image_dictionary
-
