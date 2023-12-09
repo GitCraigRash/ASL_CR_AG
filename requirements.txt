@@ -1,0 +1,6 @@
+tensorflow
+PIL
+sklearn
+matplotlib
+numpy
+os
