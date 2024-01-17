@@ -32,7 +32,9 @@ def resnet50_model(input_shape, num_classes):
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
-
+    # Freeze "lower" layers
+          num_layers = len(model.layers) - 3
+          model.layers[num_layers].trainable = False
     return model
 
 # Helper function to create residual blocks
