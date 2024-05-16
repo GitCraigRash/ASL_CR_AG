@@ -1,8 +1,8 @@
 # Javascript for app
-import Media Devices API
-import Camera.js
-import Tensorflow
-import ONNX.js
-import React.js
-import Vue.js
-import Angular
+import _ from "Media Devices API";
+import _ from Camera.js;
+import _ from Tensorflow;
+import _ from ONNX.js;
+import _ from React.js;
+import _ from Vue.js;
+import _ from Angular;
