@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Prediction</title>
+<style>
+  #videoElement {
+    width: 100%;
+    height: auto;
+  }
+  .image-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  .image {
+    width: 100px;
+    cursor: pointer;
+  }
+  #dropbox {
+    border: 2px dashed #ccc;
+    width: 300px;
+    height: 200px;
+    margin-top: 20px;
+    text-align: center;
+    line-height: 200px;
+  }
+  #dropbox.dragover {
+    background-color: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+
+<video id="videoElement" autoplay></video>
+
+<div class="image-container">
+  <img class="image" src="image1.jpg" alt="Image 1" draggable="true">
+  <img class="image" src="image2.jpg" alt="Image 2" draggable="true">
+  <img class="image" src="image3.jpg" alt="Image 3" draggable="true">
+</div>
+
+<div id="dropbox">Drop image here</div>
+
+<script>
+const video = document.getElementById('videoElement');
+const dropbox = document.getElementById('dropbox');
+
+// Display camera stream
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            video.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.error('Error accessing camera:', error);
+        });
+} else {
+    console.error('getUserMedia not supported on your browser');
+}
+
+// Drag and drop functionality
+dropbox.addEventListener('dragover', function(event) {
+    event.preventDefault();
+    dropbox.classList.add('dragover');
+});
+
+dropbox.addEventListener('dragleave', function(event) {
+    event.preventDefault();
+    dropbox.classList.remove('dragover');
+});
+
+dropbox.addEventListener('drop', function(event) {
+    event.preventDefault();
+    dropbox.classList.remove('dragover');
+    const file = event.dataTransfer.files[0];
+    if (file) {
+        // File is dropped, send it for AI prediction
+        sendForPrediction(file);
+    }
+});
+
+function sendForPrediction(file) {
+    // Here, you would send the file to your AI model for prediction
+    // You can use Fetch API or XMLHttpRequest to send the file to a server-side endpoint
+    console.log('Sending file for prediction:', file.name);
+}
+
+// Attach click event listeners to images for drag and drop
+const images = document.querySelectorAll('.image');
+images.forEach(function(image) {
+    image.addEventListener('dragstart', function(event) {
+        event.dataTransfer.setData('text/plain', image.src);
+    });
+});
+
+dropbox.addEventListener('dragover', function(event) {
+    event.preventDefault();
+});
+
+dropbox.addEventListener('drop', function(event) {
+    event.preventDefault();
+    const imageUrl = event.dataTransfer.getData('text/plain');
+    if (imageUrl) {
+        // Create an image element and display the dropped image
+        const droppedImage = new Image();
+        droppedImage.src = imageUrl;
+        droppedImage.style.width = '100px';
+        dropbox.innerHTML = '';
+        dropbox.appendChild(droppedImage);
+        // Send the dropped image for AI prediction
+        // Here, you would send the image data or URL for prediction
+        sendForPrediction(imageUrl);
+    }
+});
+</script>
+
+</body>
+</html>
