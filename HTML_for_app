@@ -1,1 +1,40 @@
 # HTML_for_app
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Stream</title>
+<style>
+  #videoElement {
+    width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+
+<video id="videoElement" autoplay></video>
+
+<script>
+// Get the video element
+const video = document.getElementById('videoElement');
+
+// Check if the browser supports the MediaDevices API
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // Access the user's camera stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            // Set the video element's source to the camera stream
+            video.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.error('Error accessing camera:', error);
+        });
+} else {
+    console.error('getUserMedia not supported on your browser');
+}
+</script>
+
+</body>
+</html>
