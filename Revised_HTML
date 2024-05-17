@@ -32,10 +32,6 @@
 </style>
 </head>
 <body>
-
-<button id="startCamera">Activate Camera</button>
-<video id="videoElement" autoplay></video>
-
 <div class="image-container">
   <img class="image" src="image1.jpg" alt="Image 1" draggable="true">
   <img class="image" src="image2.jpg" alt="Image 2" draggable="true">
@@ -43,6 +39,10 @@
 </div>
 
 <div id="dropbox">Drop image here</div>
+
+<button id="startCamera">Activate Camera</button>
+<video id="videoElement" autoplay></video>
+
 
 <script>
 const video = document.getElementById('videoElement');
