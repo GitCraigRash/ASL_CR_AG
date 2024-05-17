@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Prediction</title>
+<title>Camera Stream with Drag and Drop</title>
 <style>
   #videoElement {
     width: 100%;
@@ -32,6 +32,10 @@
 </style>
 </head>
 <body>
+
+<button id="startCamera">Activate Camera</button>
+<video id="videoElement" autoplay></video>
+
 <div class="image-container">
   <img class="image" src="image1.jpg" alt="Image 1" draggable="true">
   <img class="image" src="image2.jpg" alt="Image 2" draggable="true">
@@ -40,24 +44,28 @@
 
 <div id="dropbox">Drop image here</div>
 
-<video id="videoElement" autoplay></video>
-
 <script>
 const video = document.getElementById('videoElement');
+const startCameraButton = document.getElementById('startCamera');
 const dropbox = document.getElementById('dropbox');
 
-// Display camera stream
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function(stream) {
-            video.srcObject = stream;
-        })
-        .catch(function(error) {
-            console.error('Error accessing camera:', error);
-        });
-} else {
-    console.error('getUserMedia not supported on your browser');
+// Function to start the camera stream
+function startCamera() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+            .catch(function(error) {
+                console.error('Error accessing camera:', error);
+            });
+    } else {
+        console.error('getUserMedia not supported on your browser');
+    }
 }
+
+// Event listener for the button
+startCameraButton.addEventListener('click', startCamera);
 
 // Drag and drop functionality
 dropbox.addEventListener('dragover', function(event) {
