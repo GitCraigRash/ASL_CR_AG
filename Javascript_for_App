@@ -6,3 +6,54 @@ import _ from ONNX.js;
 import _ from React.js;
 import _ from Vue.js;
 import _ from Angular;
+// script.js
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const resultDiv = document.getElementById('result');
+
+    dropzone.addEventListener('dragover', function(event) {
+        event.preventDefault();
+        dropzone.style.borderColor = '#333';
+    });
+
+    dropzone.addEventListener('dragleave', function() {
+        dropzone.style.borderColor = '#ccc';
+    });
+
+    dropzone.addEventListener('drop', function(event) {
+        event.preventDefault();
+        dropzone.style.borderColor = '#ccc';
+
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        // Display the image or process it further
+                        dropzone.innerHTML = '';
+                        dropzone.appendChild(img);
+
+                        // Send the image to the server or ML model for prediction
+                        getPrediction(img);
+                    };
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please drop an image file.');
+            }
+        }
+    });
+
+    function getPrediction(image) {
+        // Example function to send image to a server and get prediction
+        // This is a mockup; replace with actual server or ML model call
+        const prediction = 'Example Prediction'; // Replace with actual prediction logic
+
+        // Display the prediction result
+        resultDiv.innerHTML = `Prediction: ${prediction}`;
+    }
+});
