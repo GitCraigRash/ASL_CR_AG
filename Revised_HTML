@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Camera Stream with Drag and Drop</title>
 <style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
   #videoElement {
     width: 100%;
     height: auto;
@@ -12,49 +21,66 @@
   .image-container {
     display: flex;
     justify-content: space-around;
-    margin-top: 20px;
+    margin-bottom: 20px;
   }
   .image {
     width: 100px;
     cursor: pointer;
   }
+  .drop-container {
+    display: flex;
+    align-items: center;
+  }
   #dropbox {
     border: 2px dashed #ccc;
     width: 300px;
     height: 200px;
-    margin-top: 20px;
     text-align: center;
     line-height: 200px;
+    margin-right: 20px; /* Adjust margin as needed */
   }
   #dropbox.dragover {
     background-color: #f0f0f0;
   }
+  #cameraButton {
+    margin: 0 20px;
+  }
+  #videoContainer {
+    width: 150px;
+    margin-left: 20px; /* Adjust margin as needed */
+  }
 </style>
 </head>
 <body>
+
 <div class="image-container">
-  <img class="image" src="image1.jpg" alt="Image 1" draggable="true">
-  <img class="image" src="image2.jpg" alt="Image 2" draggable="true">
-  <img class="image" src="image3.jpg" alt="Image 3" draggable="true">
+  <img class="image" src="https://via.placeholder.com/100" alt="Image 1" draggable="true">
+  <img class="image" src="https://via.placeholder.com/100" alt="Image 2" draggable="true">
+  <img class="image" src="https://via.placeholder.com/100" alt="Image 3" draggable="true">
 </div>
 
-<div id="dropbox">Drop image here</div>
-
-<button id="startCamera">Activate Camera</button>
-<video id="videoElement" autoplay></video>
-
+<div class="drop-container">
+  <div id="dropbox">Drop image here</div>
+  <button id="cameraButton">Activate Camera</button>
+  <div id="videoContainer">
+    <video id="videoElement" autoplay></video>
+  </div>
+</div>
 
 <script>
 const video = document.getElementById('videoElement');
-const startCameraButton = document.getElementById('startCamera');
+const cameraButton = document.getElementById('cameraButton');
 const dropbox = document.getElementById('dropbox');
+let stream = null;
 
 // Function to start the camera stream
 function startCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
+            .then(function(streamData) {
+                stream = streamData;
                 video.srcObject = stream;
+                cameraButton.textContent = 'Deactivate Camera';
             })
             .catch(function(error) {
                 console.error('Error accessing camera:', error);
@@ -64,8 +90,24 @@ function startCamera() {
     }
 }
 
+// Function to stop the camera stream
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        cameraButton.textContent = 'Activate Camera';
+        stream = null;
+    }
+}
+
 // Event listener for the button
-startCameraButton.addEventListener('click', startCamera);
+cameraButton.addEventListener('click', function() {
+    if (stream) {
+        stopCamera();
+    } else {
+        startCamera();
+    }
+});
 
 // Drag and drop functionality
 dropbox.addEventListener('dragover', function(event) {
